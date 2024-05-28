@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kasir Christian</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total {
+            font-weight: bold;
+        }
+        .struk {
+            margin-top: 20px;
+            padding: 10px;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h2 class="title">Kasir Christian</h2>
+    <table id="menuTable">
+        <tr>
+            <th>Menu</th>
+            <th>Harga</th>
+            <th>Jumlah</th>
+            <th>Subtotal</th>
+        </tr>
+        <!-- Tambahkan menu -->
+        <tr id="AyamGoreng">
+            <td>Ayam Goreng</td>
+            <td id="AyamGorengHarga">Rp 14.000</td>
+            <td><input type="number" id="AyamGorengJumlah" value="0" oninput="hitungSubtotal('AyamGoreng')"></td>
+            <td id="AyamGorengSubtotal">Rp 0</td>
+        </tr>
+        <!-- Tambahkan menu tambahan di sini -->
+        <tr id="NasiGoreng">
+            <td>Nasi Goreng</td>
+            <td id="NasiGorengHarga">Rp 15.000</td>
+            <td><input type="number" id="NasiGorengJumlah" value="0" oninput="hitungSubtotal('NasiGoreng')"></td>
+            <td id="NasiGorengSubtotal">Rp 0</td>
+        </tr>
+        <tr id="MieGoreng">
+            <td>Mie Goreng</td>
+            <td id="MieGorengHarga">Rp 15.000</td>
+            <td><input type="number" id="MieGorengJumlah" value="0" oninput="hitungSubtotal('MieGoreng')"></td>
+            <td id="MieGorengSubtotal">Rp 0</td>
+        </tr>
+        <tr id="SateAyam">
+            <td>Sate Ayam</td>
+            <td id="SateAyamHarga">Rp 18.000</td>
+            <td><input type="number" id="SateAyamJumlah" value="0" oninput="hitungSubtotal('SateAyam')"></td>
+            <td id="SateAyamSubtotal">Rp 0</td>
+        </tr>
+    </table>
+
+    <button onclick="cetakStruk()">Cetak Struk</button>
+
+    <div id="struk" class="struk" style="display: none;">
+        <h3>Struk Pembelian</h3>
+        <table id="strukTable">
+            <!-- Isi struk akan dimasukkan di sini -->
+        </table>
+        <hr>
+        <p>Total: <span id="totalStruk">Rp 0</span></p>
+        <p>Subtotal Pesanan: <span id="subtotalPesanan">Rp 0</span></p>
+    </div>
+
+    <footer>
+        &copy; 2024 Kasir Christian. All rights reserved.
+    </footer>
+
+    <script>
+        function hitungSubtotal(id) {
+            var jumlah = parseInt(document.getElementById(id + 'Jumlah').value);
+            var harga = parseInt(document.getElementById(id + 'Harga').innerText.split(' ')[1].replace('.', ''));
+            var subtotal = jumlah * harga;
+            document.getElementById(id + 'Subtotal').innerText = 'Rp ' + subtotal.toLocaleString();
+            hitungTotal();
+        }
+
+        function hitungTotal() {
+            var total = 0;
+            var menuIds = ['AyamGoreng', 'NasiGoreng', 'MieGoreng', 'SateAyam'];
+            for (var i = 0; i < menuIds.length; i++) {
+                var subtotal = parseInt(document.getElementById(menuIds[i] + 'Subtotal').innerText.split(' ')[1].replace('.', ''));
+                total += subtotal;
+            }
+            document.getElementById('subtotalPesanan').innerText = 'Rp ' + total.toLocaleString();
+        }
+
+        function cetakStruk() {
+            var menuIds = ['AyamGoreng', 'NasiGoreng', 'MieGoreng', 'SateAyam'];
+            var struk = '<tr><th>Menu</th><th>Jumlah</th><th>Subtotal</th></tr>';
+            var total = 0;
+            for (var i = 0; i < menuIds.length; i++) {
+                var namaMenu = document.getElementById(menuIds[i]).childNodes[1].innerText;
+                var jumlah = document.getElementById(menuIds[i] + 'Jumlah').value;
+                var subtotal = document.getElementById(menuIds[i] + 'Subtotal').innerText;
+                struk += '<tr><td>' + namaMenu + '</td><td>' + jumlah + '</td><td>' + subtotal + '</td></tr>';
+                total += parseInt(subtotal.split(' ')[1].replace('.', ''));
+            }
+            document.getElementById('strukTable').innerHTML = struk;
+            document.getElementById('totalStruk').innerText = 'Rp ' + total.toLocaleString();
+            document.getElementById('struk').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
